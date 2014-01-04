@@ -21,4 +21,8 @@ public class Surface {
 	public void setUnits(String units) {
 		this.units = units;
 	}
+
+	public String getUnits() {
+		return this.units;
+	}
 }

@@ -25,6 +25,7 @@ public class MainController {
 	FileSaver fileSaver;
 	private String calculationType = "Profile";
 	private String plotType = "2DScatter";
+	private String mode = "Profile";
 	
 	private LinkedList<Double> scales;
 	private double binSize = 0.001;
@@ -44,14 +45,14 @@ public class MainController {
 		profiles.add(profileLoader.loadFile(filePath));
 		WorkPanel.getInstance().update();
 		ProfileOptionPanel.getInstance().enablePanel();
-		OptionPanel.getInstance().disableSurfaceTab();
+		//OptionPanel.getInstance().disableSurfaceTab();
 	}
 
 	public void loadSurface(String filePath) {
 		surfaces.add(surfaceLoader.loadFile(filePath));
 		WorkPanel.getInstance().update();
 		SurfaceOptionPanel.getInstance().enablePanel();
-		OptionPanel.getInstance().disableProfileTab();
+		//OptionPanel.getInstance().disableProfileTab();
 	}
 	
 	public void saveFile(String filePath) {
@@ -104,6 +105,14 @@ public class MainController {
 	
 	public boolean getPrecalculate(){
 		return this.precalculate;
+	}
+
+	public String getMode() {
+		return mode;
+	}
+
+	public void setMode(String mode) {
+		this.mode = mode;
 	}
 
 

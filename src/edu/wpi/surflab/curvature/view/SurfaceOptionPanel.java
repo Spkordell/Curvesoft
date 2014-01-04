@@ -26,7 +26,7 @@ public class SurfaceOptionPanel extends JPanel {
 	}
 
 	public void enablePanel() {
-		mainController.setPlotType("Surface");
+		mainController.setMode("Surface");
 	}
 
 }

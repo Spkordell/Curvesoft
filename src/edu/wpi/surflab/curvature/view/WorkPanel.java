@@ -59,12 +59,16 @@ public class WorkPanel extends JPanel implements Runnable {
 	
 	public void run() {
 		removeAll();
-		graph();
+		if (mainController.getMode().equals("Profile")){
+			graphProfileMode();
+		} else if(mainController.getMode().equals("Surface")){
+			graphSurfaceMode();
+		}
 		validate();
 		isRunning = false;
 		//OptionPanel.getInstance().enablePanel();
 	}
-	
+
 	public void update() {
 		if (!isRunning) {
 			t = new Thread(this);
@@ -74,8 +78,70 @@ public class WorkPanel extends JPanel implements Runnable {
 		}
 	}
 	
+	private void graphSurfaceMode() {
+		//System.out.println("Surface Mode");
+		drawSurface();
+	}
+	
+	private void drawSurface() {		
+		JSurfacePanel surfacePanel = new JSurfacePanel();
+
+        surfacePanel.setTitleText("");
+        surfacePanel.setBackground(Color.white);
+        surfacePanel.setTitleFont(surfacePanel.getTitleFont().deriveFont(surfacePanel.getTitleFont().getStyle() | Font.BOLD, surfacePanel.getTitleFont().getSize() + 6f));
+        surfacePanel.setConfigurationVisible(false);
+		surfacePanel.getSurface().setXLabel("X ("+mainController.getSurface().getUnits()+")");
+		surfacePanel.getSurface().setYLabel("Y ("+mainController.getSurface().getUnits()+")");
+		
+		this.savePointOfView();
+        model = new ProgressiveSurfaceModel() ;        
+        surfacePanel.setModel(model);
+           
+        //TODO: Complete the below two lines
+        //model.setYMin((float) mainController.getSurface().getMinPosition());
+        //model.setYMax((float) mainController.getSurface().getMaxPosition());            
+                    
+        model.setDisplayXY(true);
+        model.setDisplayZ(true);
+ 
+        this.restorePointOfView();
+        
+        /*
+        model.setMapper(new Mapper() {
+                public  float f1( float a, float b) {
+                	                    	
+
+                	int x = (int) (map(a,model.getXMin(),model.getXMax(),0,mainController.getSurface().allCalculatedScales.size())*.999);
+                	//int y = (int) (map(b,model.getYMin(),model.getYMax(),0,mainController.getProfile().allCalculatedPoints.get(x).size())*.999);            	
+                	int y = (int) (map(b,model.getYMin(),model.getYMax(),0,mainController.getSurface().allCalculatedPoints.getFirst().size())*.999);
+                	
+                	
+                	try {
+                		float z = mainController.getSurface().allCalculatedPoints.get(x).get(y).getY().floatValue();
+                		//System.out.println(y+"--"+mainController.getProfile().allCalculatedPoints.get(x).size()+"--"+model.getYMax());
+                		return z;
+                	}  catch (Exception  e) {
+                		//e.printStackTrace();
+                		//System.out.println("Exception");
+                		return 0;
+                	}
+                	//System.out.println(x+"/"+mainController.getProfile().allCalculatedScales.size()+","+y+"/"+mainController.getProfile().allCalculatedPoints.get(0).size()+","+z);             
+                	
+                }
+
+				@Override
+				public float f2(float x, float y) {
+					// TODO Auto-generated method stub
+					return 0;
+				}
+        });
+    */
+        model.plot().execute();
+        this.add(surfacePanel);
+	}
+
 	@SuppressWarnings("deprecation")
-	private void graph() {
+	private void graphProfileMode() {
 		JFreeChart chart = null;
 		
 		if (mainController.getPlotType().equals("2DScatter")) {
@@ -230,8 +296,6 @@ public class WorkPanel extends JPanel implements Runnable {
             model.plot().execute();
 
             this.add(surfacePanel);
-		} else if (mainController.getPlotType().equals("Surface")) {
-			System.out.println("Displaying Surface");
 		}
 		ProfileOptionPanel.getInstance().hideProgressBar();
 		ProfileOptionPanel.getInstance().hideStatusLabel();

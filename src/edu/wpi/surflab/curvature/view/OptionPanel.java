@@ -5,6 +5,8 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import edu.wpi.surflab.curvature.controller.MainController;
 
@@ -22,6 +24,23 @@ public class OptionPanel extends JPanel {
 		tabbedPane.addTab("Surface",SurfaceOptionPanel.getInstance(mainController));
 		tabbedPane.setMnemonicAt(1,KeyEvent.VK_0);
 		
+		tabbedPane.addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				switch(tabbedPane.getSelectedIndex()) {
+				case 0:
+					mainController.setMode("Profile");
+					break;
+				case 1:
+					mainController.setMode("Surface");
+					break;
+				}
+				WorkPanel.getInstance().update();
+				System.out.println(tabbedPane.getSelectedIndex());
+			}
+			
+		});
 		setLayout(new BorderLayout());
 		this.add(tabbedPane,BorderLayout.CENTER);
 	}
