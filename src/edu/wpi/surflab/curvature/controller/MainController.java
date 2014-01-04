@@ -5,9 +5,11 @@ package edu.wpi.surflab.curvature.controller;
 
 import java.util.LinkedList;
 
-import edu.wpi.surflab.curvature.model.DataPoint;
 import edu.wpi.surflab.curvature.model.Profile;
+import edu.wpi.surflab.curvature.model.Surface;
 import edu.wpi.surflab.curvature.view.OptionPanel;
+import edu.wpi.surflab.curvature.view.ProfileOptionPanel;
+import edu.wpi.surflab.curvature.view.SurfaceOptionPanel;
 import edu.wpi.surflab.curvature.view.WorkPanel;
 
 /**
@@ -17,7 +19,9 @@ import edu.wpi.surflab.curvature.view.WorkPanel;
 public class MainController {
 
 	LinkedList<Profile> profiles;
-	FileLoader fileLoader;
+	LinkedList<Surface> surfaces;
+	ProfileLoader profileLoader;
+	SurfaceLoader surfaceLoader;
 	FileSaver fileSaver;
 	private String calculationType = "Profile";
 	private String plotType = "2DScatter";
@@ -25,26 +29,41 @@ public class MainController {
 	private LinkedList<Double> scales;
 	private double binSize = 0.001;
 	private boolean precalculate;
+
 	
 	public MainController() {
 		scales = new LinkedList<Double>(); 
-		fileLoader = new FileLoader();
+		profileLoader = new ProfileLoader();
+		surfaceLoader = new SurfaceLoader();
 		fileSaver = new FileSaver();
 		profiles = new LinkedList<Profile>();
+		surfaces = new LinkedList<Surface>();
 	}
 
-	public void loadFile(String filePath) {
-		profiles.add(fileLoader.loadFile(filePath));
+	public void loadProfile(String filePath) {
+		profiles.add(profileLoader.loadFile(filePath));
 		WorkPanel.getInstance().update();
-		OptionPanel.getInstance().enablePanel();
+		ProfileOptionPanel.getInstance().enablePanel();
+		OptionPanel.getInstance().disableSurfaceTab();
 	}
 
+	public void loadSurface(String filePath) {
+		surfaces.add(surfaceLoader.loadFile(filePath));
+		WorkPanel.getInstance().update();
+		SurfaceOptionPanel.getInstance().enablePanel();
+		OptionPanel.getInstance().disableProfileTab();
+	}
+	
 	public void saveFile(String filePath) {
 		fileSaver.saveFile(filePath,profiles.getLast().allCalculatedPoints,profiles.getLast().allCalculatedScales, profiles.getLast().calculatedDistribution,getProfile().getUnits());
 	}
 	
 	public Profile getProfile() {
 		return profiles.getLast();
+	}
+	
+	public Surface getSurface() {
+		return surfaces.getLast();
 	}
 
 	public void setCalculationType(String actionCommand) {
@@ -86,6 +105,10 @@ public class MainController {
 	public boolean getPrecalculate(){
 		return this.precalculate;
 	}
+
+
+
+
 
 	/*
 	public void precalculate() {

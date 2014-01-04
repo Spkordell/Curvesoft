@@ -20,6 +20,7 @@ import edu.wpi.surflab.curvature.controller.MainController;
 import edu.wpi.surflab.curvature.view.actions.ExitApplicationAction;
 import edu.wpi.surflab.curvature.view.actions.SaveResultAction;
 import edu.wpi.surflab.curvature.view.actions.loadProfileAction;
+import edu.wpi.surflab.curvature.view.actions.loadSurfaceAction;
 
 /**
  * @author Steven
@@ -45,14 +46,20 @@ public class MainMenu extends JPanel{
 		menu.getAccessibleContext().setAccessibleDescription("File Menu");
 		menuBar.add(menu);
 		
-		menuItem = new JMenuItem("Load Profile",KeyEvent.VK_L);
+		menuItem = new JMenuItem("Load Profile",KeyEvent.VK_P);
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_1, ActionEvent.ALT_MASK));
 		menuItem.getAccessibleContext().setAccessibleDescription("Load's a profile");
 		menuItem.addActionListener(new loadProfileAction(parent, mainController));
 		menu.add(menuItem);
 		
-		menuItem = new JMenuItem("Export Result",KeyEvent.VK_S);
+		menuItem = new JMenuItem("Load Surface",KeyEvent.VK_S);
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_2, ActionEvent.ALT_MASK));
+		menuItem.getAccessibleContext().setAccessibleDescription("Load's a surface");
+		menuItem.addActionListener(new loadSurfaceAction(parent, mainController));
+		menu.add(menuItem);
+		
+		menuItem = new JMenuItem("Export Result",KeyEvent.VK_S);
+		menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_3, ActionEvent.ALT_MASK));
 		menuItem.getAccessibleContext().setAccessibleDescription("Saves the current calculations to a file");
 		menuItem.addActionListener(new SaveResultAction(parent, mainController));
 		menu.add(menuItem);

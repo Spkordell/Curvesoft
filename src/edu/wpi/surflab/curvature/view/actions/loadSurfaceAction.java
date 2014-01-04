@@ -1,6 +1,5 @@
 package edu.wpi.surflab.curvature.view.actions;
 
-
 import java.awt.FileDialog;
 import java.awt.Frame;
 import java.awt.GridLayout;
@@ -16,22 +15,22 @@ import edu.wpi.surflab.curvature.controller.MainController;
 import edu.wpi.surflab.curvature.view.Main;
 import edu.wpi.surflab.curvature.view.WorkPanel;
 
-public class loadProfileAction implements ActionListener {
+public class loadSurfaceAction implements ActionListener {
 
 	FileDialog fd; 
 	MainController mainController;
 	Frame mainFrame;
 	
-	public loadProfileAction(Frame mainFrame, MainController mainController) {
+	public loadSurfaceAction(Frame mainFrame, MainController mainController) {
 		this.mainController = mainController;
 		this.mainFrame = mainFrame;
 	}
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		fd = new FileDialog(this.mainFrame, "Select a profile", FileDialog.LOAD);
+		fd = new FileDialog(this.mainFrame, "Select a surface", FileDialog.LOAD);
 	    fd.setVisible(true);
-	    mainController.loadProfile(fd.getDirectory() + System.getProperty("file.separator") + fd.getFile());
+	    mainController.loadSurface(fd.getDirectory() + System.getProperty("file.separator") + fd.getFile());
 	    
 	    //Prompt the user for the correct units
 	    
@@ -64,7 +63,7 @@ public class loadProfileAction implements ActionListener {
         String s = (String)UnitsComboBox.getSelectedItem();
        // mainController.setPrecalculate(PreCalcCheck.isSelected());
 	    if ((s != null) && (s.length() > 0)) {
-	        mainController.getProfile().setUnits(s);
+	        mainController.getSurface().setUnits(s);
 	        WorkPanel.getInstance().update();
 	        //return;
 	    }

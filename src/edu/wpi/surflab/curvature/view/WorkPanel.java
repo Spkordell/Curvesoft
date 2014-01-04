@@ -27,7 +27,7 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
 import edu.wpi.surflab.curvature.controller.MainController;
-import edu.wpi.surflab.curvature.model.DataPoint;
+import edu.wpi.surflab.curvature.model.DataPoint2D;
 
 @SuppressWarnings("serial")
 public class WorkPanel extends JPanel implements Runnable {
@@ -140,11 +140,11 @@ public class WorkPanel extends JPanel implements Runnable {
 			this.add(chartPanel);		
 		} else if (mainController.getPlotType().equals("3DScatter")) {	
 			
-			OptionPanel.getInstance().showProgressBar();
-			OptionPanel.getInstance().setProgress(0);
-			OptionPanel.getInstance().showStatusLabel("Calculating Values");
+			ProfileOptionPanel.getInstance().showProgressBar();
+			ProfileOptionPanel.getInstance().setProgress(0);
+			ProfileOptionPanel.getInstance().showStatusLabel("Calculating Values");
 			int count = 0;
-			mainController.getProfile().allCalculatedPoints = new LinkedList<LinkedList<DataPoint>>();
+			mainController.getProfile().allCalculatedPoints = new LinkedList<LinkedList<DataPoint2D>>();
 			mainController.getProfile().allCalculatedScales = new LinkedList<Double>();	
 			if (!mainController.getCalculationType().equals("Profile")) {	
 				for (Double scale: mainController.getScales()) {
@@ -154,7 +154,7 @@ public class WorkPanel extends JPanel implements Runnable {
 						mainController.getProfile().allCalculatedPoints.removeLast();
 						mainController.getProfile().allCalculatedScales.removeLast();
 					}
-					OptionPanel.getInstance().setProgress((int)((((float)count)/mainController.getScales().size())*100));
+					ProfileOptionPanel.getInstance().setProgress((int)((((float)count)/mainController.getScales().size())*100));
 					count++;
 				}
 			} else {
@@ -230,9 +230,11 @@ public class WorkPanel extends JPanel implements Runnable {
             model.plot().execute();
 
             this.add(surfacePanel);
+		} else if (mainController.getPlotType().equals("Surface")) {
+			System.out.println("Displaying Surface");
 		}
-		OptionPanel.getInstance().hideProgressBar();
-		OptionPanel.getInstance().hideStatusLabel();
+		ProfileOptionPanel.getInstance().hideProgressBar();
+		ProfileOptionPanel.getInstance().hideStatusLabel();
 	}
 	
 	public void savePointOfView() {
@@ -262,22 +264,22 @@ public class WorkPanel extends JPanel implements Runnable {
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();       
 
 		//Calculate the curvatures
-		OptionPanel.getInstance().showStatusLabel("Calculating Values");
-		OptionPanel.getInstance().showProgressBar();
-		OptionPanel.getInstance().setProgress(0);
-		mainController.getProfile().allCalculatedPoints = new LinkedList<LinkedList<DataPoint>>();
+		ProfileOptionPanel.getInstance().showStatusLabel("Calculating Values");
+		ProfileOptionPanel.getInstance().showProgressBar();
+		ProfileOptionPanel.getInstance().setProgress(0);
+		mainController.getProfile().allCalculatedPoints = new LinkedList<LinkedList<DataPoint2D>>();
 		mainController.getProfile().allCalculatedScales = new LinkedList<Double>();	
 		count = 0;
 		for (Double scale: mainController.getScales()) {
 			mainController.getProfile().allCalculatedPoints.add(mainController.getProfile().calculateCurvature(calculationType, scale));
 			mainController.getProfile().allCalculatedScales.add(scale);
-			OptionPanel.getInstance().setProgress((int)((((float)count)/mainController.getScales().size())*100));
+			ProfileOptionPanel.getInstance().setProgress((int)((((float)count)/mainController.getScales().size())*100));
 			//System.out.println((int)((((float)count)/mainController.getScales().size())*100));
 			count++;
 		}
 		
 		//prepare bin statistics
-		OptionPanel.getInstance().showStatusLabel("Preparing Bins");
+		ProfileOptionPanel.getInstance().showStatusLabel("Preparing Bins");
 		double maxBin = mainController.getProfile().getMaxCurvature();
 		double minBin = mainController.getProfile().getMinCurvature();		
 		maxBin = Math.ceil(maxBin/ binSize) * binSize;
@@ -291,59 +293,59 @@ public class WorkPanel extends JPanel implements Runnable {
 		if (binCount > 0) {
 		    //zero the bins
 		    //LinkedList<DataPoint> distribution = new LinkedList<DataPoint>();
-			DataPoint[] distribution = new DataPoint[binCount];
+			DataPoint2D[] distribution = new DataPoint2D[binCount];
 		    //distribution.add(new DataPoint(minBin,0.0));
-			distribution[0] = new DataPoint(minBin,0.0);
+			distribution[0] = new DataPoint2D(minBin,0.0);
 			int i = 1;
 		    /*while (distribution.size() < binCount) {
 		      distribution.add(new DataPoint(distribution.getLast().getX()+binSize,0.0));
 		    }*/
 			count = 0;
 		    while (i < binCount) {
-		      distribution[i] = new DataPoint(distribution[i-1].getX()+binSize,0.0);
+		      distribution[i] = new DataPoint2D(distribution[i-1].getX()+binSize,0.0);
 		      i++;
-		      OptionPanel.getInstance().setProgress((int)((((float)count)/binCount)*100));
+		      ProfileOptionPanel.getInstance().setProgress((int)((((float)count)/binCount)*100));
 		      count++;
 		    }
 		    		  
 		    //Fill the bins
-			OptionPanel.getInstance().showStatusLabel("Filling Bins");
+			ProfileOptionPanel.getInstance().showStatusLabel("Filling Bins");
 		    count = 0;
 		    int bin;	  
-		    for (LinkedList<DataPoint> curvaturesAtScale: mainController.getProfile().allCalculatedPoints) {
-			   for (DataPoint point: curvaturesAtScale) {		  
+		    for (LinkedList<DataPoint2D> curvaturesAtScale: mainController.getProfile().allCalculatedPoints) {
+			   for (DataPoint2D point: curvaturesAtScale) {		  
 			 	  bin = (int)(((Math.floor((point.getY()) / binSize) * binSize)-minBin)/binSize);
 			 	  //distribution.get(bin).incrementY();
 			 	  distribution[bin].incrementY();
 			   }
-			   OptionPanel.getInstance().setProgress((int)((((float)count)/mainController.getProfile().allCalculatedPoints.size())*100));
+			   ProfileOptionPanel.getInstance().setProgress((int)((((float)count)/mainController.getProfile().allCalculatedPoints.size())*100));
 			   count++;
 		    } 
 			
 		    mainController.getProfile().calculatedDistribution = distribution;
 		    
-			OptionPanel.getInstance().showStatusLabel("Preparing Plot");
+			ProfileOptionPanel.getInstance().showStatusLabel("Preparing Plot");
 		    count = 0;
-			for (DataPoint point: distribution) {
+			for (DataPoint2D point: distribution) {
 				dataset.addValue(point.getY(), calculationType, point.getX());
-				OptionPanel.getInstance().setProgress((int)((((float)count)/distribution.length)*100));
+				ProfileOptionPanel.getInstance().setProgress((int)((((float)count)/distribution.length)*100));
 				count++;
 			}
 		}
-		OptionPanel.getInstance().hideStatusLabel();
-		OptionPanel.getInstance().hideProgressBar();
+		ProfileOptionPanel.getInstance().hideStatusLabel();
+		ProfileOptionPanel.getInstance().hideProgressBar();
 		return dataset;
 	}
 
 	private XYDataset makeCurvatureDataSet(String calculationType) {
 		XYSeriesCollection dataSet = new XYSeriesCollection();
 		
-		mainController.getProfile().allCalculatedPoints = new LinkedList<LinkedList<DataPoint>>();
+		mainController.getProfile().allCalculatedPoints = new LinkedList<LinkedList<DataPoint2D>>();
 		mainController.getProfile().allCalculatedScales = new LinkedList<Double>();
 		
-		OptionPanel.getInstance().showProgressBar();
-		OptionPanel.getInstance().setProgress(0);
-		OptionPanel.getInstance().showStatusLabel("Calculating Values");
+		ProfileOptionPanel.getInstance().showProgressBar();
+		ProfileOptionPanel.getInstance().setProgress(0);
+		ProfileOptionPanel.getInstance().showStatusLabel("Calculating Values");
 		int count = 0;
 		for (Double scale: mainController.getScales()) {
 			XYSeries series = new XYSeries("Scale:"+scale);
@@ -351,39 +353,39 @@ public class WorkPanel extends JPanel implements Runnable {
 			mainController.getProfile().allCalculatedPoints.add(mainController.getProfile().calculateCurvature(calculationType, scale));
 			mainController.getProfile().allCalculatedScales.add(scale);
 			
-			for (DataPoint point: mainController.getProfile().allCalculatedPoints.getLast()) {
+			for (DataPoint2D point: mainController.getProfile().allCalculatedPoints.getLast()) {
 				Double x = point.getX();
 				Double y = point.getY();
 				series.add(x,y);
 			}
 			dataSet.addSeries(series);
-			OptionPanel.getInstance().setProgress((int)((((float)count)/mainController.getScales().size())*100));
+			ProfileOptionPanel.getInstance().setProgress((int)((((float)count)/mainController.getScales().size())*100));
 			count++;
 		}
 		 
-		OptionPanel.getInstance().hideProgressBar();
-		OptionPanel.getInstance().hideStatusLabel();
+		ProfileOptionPanel.getInstance().hideProgressBar();
+		ProfileOptionPanel.getInstance().hideStatusLabel();
 		return dataSet;
 	}
 
 	public XYDataset makeProfileDataSet() {
-		OptionPanel.getInstance().showProgressBar();
-		OptionPanel.getInstance().setProgress(0);
-		OptionPanel.getInstance().showStatusLabel("Plotting Profile");
+		ProfileOptionPanel.getInstance().showProgressBar();
+		ProfileOptionPanel.getInstance().setProgress(0);
+		ProfileOptionPanel.getInstance().showStatusLabel("Plotting Profile");
 		
 	   XYSeriesCollection dataSet = new XYSeriesCollection();
 	    XYSeries series = new XYSeries("Profile");
 	    int count = 0;
-	    for (DataPoint point: mainController.getProfile().getProfile()) {
+	    for (DataPoint2D point: mainController.getProfile().getProfile()) {
 	    	Double x = point.getX();
 	    	Double y = point.getY();
 	        series.add(x,y);
-	        OptionPanel.getInstance().setProgress((int)((((float)count)/mainController.getProfile().getProfile().size())*100));
+	        ProfileOptionPanel.getInstance().setProgress((int)((((float)count)/mainController.getProfile().getProfile().size())*100));
 	        count++;
 	    }
 	    dataSet.addSeries(series);
-	    OptionPanel.getInstance().hideProgressBar();
-	    OptionPanel.getInstance().hideStatusLabel();
+	    ProfileOptionPanel.getInstance().hideProgressBar();
+	    ProfileOptionPanel.getInstance().hideStatusLabel();
 	   return dataSet;
 	}
 }

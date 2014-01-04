@@ -11,29 +11,29 @@ import java.util.LinkedList;
  */
 public class Profile {
 
-	LinkedList<DataPoint> points = new LinkedList<DataPoint>();
-	private LinkedList<DataPoint> calculatedPoints;
-	public LinkedList<LinkedList<DataPoint>> allCalculatedPoints;
+	LinkedList<DataPoint2D> points = new LinkedList<DataPoint2D>();
+	private LinkedList<DataPoint2D> calculatedPoints;
+	public LinkedList<LinkedList<DataPoint2D>> allCalculatedPoints;
 	public LinkedList<Double> allCalculatedScales;
-	public DataPoint[] calculatedDistribution;
+	public DataPoint2D[] calculatedDistribution;
 	private String units;
 	
-	public void add(DataPoint dataPoint) {
+	public void add(DataPoint2D dataPoint) {
 		points.add(dataPoint);
 	}
 
-	public LinkedList<DataPoint> getProfile() {
+	public LinkedList<DataPoint2D> getProfile() {
 		return points;
 	}
 
-	public LinkedList<DataPoint> calculateCurvature(String calculationType, Double scale) {
+	public LinkedList<DataPoint2D> calculateCurvature(String calculationType, Double scale) {
 		int shift = 1;
 		
-		DataPoint one;
-		DataPoint two;
-		DataPoint three;
+		DataPoint2D one;
+		DataPoint2D two;
+		DataPoint2D three;
 		
-		calculatedPoints = new LinkedList<DataPoint>();
+		calculatedPoints = new LinkedList<DataPoint2D>();
 		
 		if ((int)(scale/samplingInterval()) < points.size()) {
 			one = points.get(0);
@@ -78,9 +78,9 @@ public class Profile {
 	 * @param three The last data point
 	 * @returns The curvature of the three points as determined using heron's method
 	*/ 
-	private DataPoint heronCurvature(DataPoint one, DataPoint two, DataPoint three) {
+	private DataPoint2D heronCurvature(DataPoint2D one, DataPoint2D two, DataPoint2D three) {
 		  if (((one.getY()+three.getY())/2) == two.getY()) {
-		    return new DataPoint(two.getX(),(double)0); //If the three points lie on the same line, the curvature is 0;
+		    return new DataPoint2D(two.getX(),(double)0); //If the three points lie on the same line, the curvature is 0;
 		  }
 
 		  double a = Math.sqrt(square(two.getX() - one.getX()) + square(two.getY() - one.getY()));
@@ -95,7 +95,7 @@ public class Profile {
 		    r*=-1;
 		  }
 
-		  return new DataPoint(two.getX(),1/r);
+		  return new DataPoint2D(two.getX(),1/r);
 	}
 	
 	
@@ -105,7 +105,7 @@ public class Profile {
 	 * @param three The last data point
 	 * @returns The curvature of the three points as determined using either heron's or the calculus method, whichever is better
 	*/ 
-	private DataPoint hybridCurvature(DataPoint one, DataPoint two, DataPoint three, double scale) {
+	private DataPoint2D hybridCurvature(DataPoint2D one, DataPoint2D two, DataPoint2D three, double scale) {
 	  double a = Math.sqrt(square(two.getX() - one.getX()) + square(two.getY() - one.getY()));
 	  double b = Math.sqrt(square(three.getX() - two.getX()) + square(three.getY() - two.getY()));
 
@@ -124,8 +124,8 @@ public class Profile {
 	 * @param three The last data point
 	 * @returns The curvature of the three points as determined using the double derivative approximation method
 	*/ 
-	private DataPoint doubleDerivativeCurvature(DataPoint one, DataPoint two, DataPoint three){
-	  return new DataPoint(two.getX(),(three.getY()-2*two.getY()+one.getY())/square(two.getX()-one.getX()));
+	private DataPoint2D doubleDerivativeCurvature(DataPoint2D one, DataPoint2D two, DataPoint2D three){
+	  return new DataPoint2D(two.getX(),(three.getY()-2*two.getY()+one.getY())/square(two.getX()-one.getX()));
 	}
 	
 	/** Squares a number
@@ -162,10 +162,10 @@ public class Profile {
 	 * @param three The last data point
 	 * @returns The curvature of the three points as determined using the calculus method
 	*/ 
-	private DataPoint calculusCurvature(DataPoint one, DataPoint two, DataPoint three) {
+	private DataPoint2D calculusCurvature(DataPoint2D one, DataPoint2D two, DataPoint2D three) {
 	  double yprime = (three.getY() - one.getY())/(2* (two.getX()-one.getX())); 
 	  double ydoubleprime = (three.getY()-2*two.getY()+one.getY())/square(two.getX()-one.getX());
-	  return new DataPoint(two.getX(),ydoubleprime/cube(Math.sqrt(1+square(yprime))));
+	  return new DataPoint2D(two.getX(),ydoubleprime/cube(Math.sqrt(1+square(yprime))));
 	}
 
 	
@@ -174,11 +174,11 @@ public class Profile {
 	* @param two The second data point
 	* @returns The slope of line between two points
 	*/
-	private DataPoint slope(DataPoint one, DataPoint two){
-	  return new DataPoint(two.getX(),(two.getY() - one.getY())/(two.getX() - one.getX()));
+	private DataPoint2D slope(DataPoint2D one, DataPoint2D two){
+	  return new DataPoint2D(two.getX(),(two.getY() - one.getY())/(two.getX() - one.getX()));
 	}
 
-	public LinkedList<DataPoint> getCalculatedData() {
+	public LinkedList<DataPoint2D> getCalculatedData() {
 		return this.calculatedPoints;
 	}
 
@@ -196,8 +196,8 @@ public class Profile {
 
 	public double getMinCurvature() {
 		double min = Double.POSITIVE_INFINITY;
-		for (LinkedList<DataPoint> a: this.allCalculatedPoints) {
-			for (DataPoint b: a) {
+		for (LinkedList<DataPoint2D> a: this.allCalculatedPoints) {
+			for (DataPoint2D b: a) {
 				if (b.getY() < min) {
 					min = b.getY();
 				}
@@ -208,8 +208,8 @@ public class Profile {
 	
 	public double getMaxCurvature() {
 		double max = Double.NEGATIVE_INFINITY;
-		for (LinkedList<DataPoint> a: this.allCalculatedPoints) {
-			for (DataPoint b: a) {
+		for (LinkedList<DataPoint2D> a: this.allCalculatedPoints) {
+			for (DataPoint2D b: a) {
 				if (b.getY() > max) {
 					max = b.getY();
 				}
@@ -220,7 +220,7 @@ public class Profile {
 	
 	public double getMinPosition() {
 		double min = Double.POSITIVE_INFINITY;
-		for (LinkedList<DataPoint> a: this.allCalculatedPoints) {
+		for (LinkedList<DataPoint2D> a: this.allCalculatedPoints) {
 			if (a.getFirst().getX() < min) {
 				min = a.getFirst().getX();
 			}
@@ -231,7 +231,7 @@ public class Profile {
 	
 	public double getMaxPosition() {
 		double max = Double.NEGATIVE_INFINITY;
-		for (LinkedList<DataPoint> a: this.allCalculatedPoints) {
+		for (LinkedList<DataPoint2D> a: this.allCalculatedPoints) {
 			if (a.getLast().getX() > max) {
 				max = a.getLast().getX();
 			}
@@ -251,8 +251,8 @@ public class Profile {
 		return this.points.getLast().getX();
 	}
 
-	public void setUnits(String s) {
-		this.units = s;
+	public void setUnits(String units) {
+		this.units = units;
 	}
 	
 	public String getUnits() {

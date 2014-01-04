@@ -9,8 +9,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.LinkedList;
 
-import edu.wpi.surflab.curvature.model.DataPoint;
-import edu.wpi.surflab.curvature.view.OptionPanel;
+import edu.wpi.surflab.curvature.model.DataPoint2D;
+import edu.wpi.surflab.curvature.view.ProfileOptionPanel;
 
 /**
  * @author Steven
@@ -18,7 +18,7 @@ import edu.wpi.surflab.curvature.view.OptionPanel;
  */
 public class FileSaver {
 
-	public void saveFile(String filename, LinkedList<LinkedList<DataPoint>> allCalculatedPoints, LinkedList<Double> allCalculatedScales, DataPoint[] calculatedDistribution, String units) {
+	public void saveFile(String filename, LinkedList<LinkedList<DataPoint2D>> allCalculatedPoints, LinkedList<Double> allCalculatedScales, DataPoint2D[] calculatedDistribution, String units) {
 		try { 
 			File file = new File(filename);
  
@@ -30,10 +30,10 @@ public class FileSaver {
 			FileWriter fw = new FileWriter(file.getAbsoluteFile());
 			BufferedWriter bw = new BufferedWriter(fw);
 			
-			if (OptionPanel.getInstance().getScatter2dRadio().isSelected()) {
+			if (ProfileOptionPanel.getInstance().getScatter2dRadio().isSelected()) {
 				bw.write("scale ("+units+"),postion ("+units+"),result (1/"+units+")\n");
 				for (int i = 0; i < allCalculatedPoints.size(); i++) {
-					for (DataPoint p : allCalculatedPoints.get(i)) {
+					for (DataPoint2D p : allCalculatedPoints.get(i)) {
 						bw.write(allCalculatedScales.get(i)+","+p.getX()+","+p.getY()+"\n");
 					}
 				}
