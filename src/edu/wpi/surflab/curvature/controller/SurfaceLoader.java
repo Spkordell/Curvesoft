@@ -6,6 +6,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
+import javax.swing.JOptionPane;
+
 import edu.wpi.surflab.curvature.model.DataPoint3D;
 import edu.wpi.surflab.curvature.model.Surface;
 
@@ -18,18 +20,18 @@ public class SurfaceLoader {
 			String line;
 			String[] columnData;
 			while ((line = reader.readLine()) != null) {
-			      columnData = line.split("[\t,]+");
+			      columnData = line.split("[\t, ]+");
 			      if (columnData.length == 2) {
 			    	  surface.add(new DataPoint3D(Double.valueOf(columnData[0]), Double.valueOf(columnData[1]),Double.valueOf(columnData[2])));
 			      }
 			}
 			reader.close();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "File Not Found","File Not Found",JOptionPane.ERROR_MESSAGE);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "IOException","IOException",JOptionPane.ERROR_MESSAGE);
+		} catch (ArrayIndexOutOfBoundsException e) {
+			JOptionPane.showMessageDialog(null, "Input file must be x, y, and z coordinates deliminated by either tabs, spaces, or commas.","Incorrect File Format",JOptionPane.ERROR_MESSAGE);
 		}
 		return surface;
 	}

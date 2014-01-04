@@ -9,6 +9,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
+import javax.swing.JOptionPane;
+
 import edu.wpi.surflab.curvature.model.DataPoint2D;
 import edu.wpi.surflab.curvature.model.Profile;
 
@@ -26,18 +28,18 @@ public class ProfileLoader {
 			String line;
 			String[] columnData;
 			while ((line = reader.readLine()) != null) {
-			      columnData = line.split("[\t,]+");
+			      columnData = line.split("[\t, ]+");
 			      if (columnData.length == 2) {
 			    	  profile.add(new DataPoint2D(Double.valueOf(columnData[0]), Double.valueOf(columnData[1])));
 			      }
 			}
 			reader.close();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		}  catch (FileNotFoundException e) {
+			JOptionPane.showMessageDialog(null, "File Not Found","File Not Found",JOptionPane.ERROR_MESSAGE);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "IOException","IOException",JOptionPane.ERROR_MESSAGE);
+		} catch (ArrayIndexOutOfBoundsException e) {
+			JOptionPane.showMessageDialog(null, "Input file must be x and y coordinates deliminated by either tabs, spaces, or commas.","Incorrect File Format",JOptionPane.ERROR_MESSAGE);
 		}
 		return profile;
 	}
