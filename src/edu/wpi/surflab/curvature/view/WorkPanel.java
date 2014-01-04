@@ -25,6 +25,7 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
+
 import edu.wpi.surflab.curvature.controller.MainController;
 import edu.wpi.surflab.curvature.model.DataPoint;
 
@@ -201,16 +202,21 @@ public class WorkPanel extends JPanel implements Runnable {
 		                	                    	
 		                	
 		                	int x = (int) (map(a,model.getXMin(),model.getXMax(),0,mainController.getProfile().allCalculatedScales.size())*.999);
-		                	int y = (int) (map(b,model.getYMin(),model.getYMax(),0,mainController.getProfile().allCalculatedPoints.get(x).size())*.999);
+		                	//int y = (int) (map(b,model.getYMin(),model.getYMax(),0,mainController.getProfile().allCalculatedPoints.get(x).size())*.999);            	
+		                	int y = (int) (map(b,model.getYMin(),model.getYMax(),0,mainController.getProfile().allCalculatedPoints.getFirst().size())*.999);
 		                	
-		                //	try {
-		                	float z = mainController.getProfile().allCalculatedPoints.get(x).get(y).getY().floatValue();
-		                /*	}  catch (IndexOutOfBoundsException  e) {
-		                		System.out.println("IndexOutOfBoundException");2
+		                	
+		                	try {
+		                		float z = mainController.getProfile().allCalculatedPoints.get(x).get(y).getY().floatValue();
+		                		//System.out.println(y+"--"+mainController.getProfile().allCalculatedPoints.get(x).size()+"--"+model.getYMax());
+		                		return z;
+		                	}  catch (Exception  e) {
+		                		//e.printStackTrace();
+		                		//System.out.println("Exception");
 		                		return 0;
-		                	}*/
+		                	}
 		                	//System.out.println(x+"/"+mainController.getProfile().allCalculatedScales.size()+","+y+"/"+mainController.getProfile().allCalculatedPoints.get(0).size()+","+z);             
-		                	return z;
+		                	
 		                }
 		
 						@Override
