@@ -45,14 +45,16 @@ public class MainController {
 		profiles.add(profileLoader.loadFile(filePath));
 		WorkPanel.getInstance().update();
 		ProfileOptionPanel.getInstance().enablePanel();
-		//OptionPanel.getInstance().disableSurfaceTab();
+		OptionPanel.getInstance().disableSurfaceTab();
+		OptionPanel.getInstance().setProfileTabActive();
 	}
 
 	public void loadSurface(String filePath) {
 		surfaces.add(surfaceLoader.loadFile(filePath));
 		WorkPanel.getInstance().update();
 		SurfaceOptionPanel.getInstance().enablePanel();
-		//OptionPanel.getInstance().disableProfileTab();
+		OptionPanel.getInstance().disableProfileTab();
+		OptionPanel.getInstance().setSurfaceTabActive();
 	}
 	
 	public void saveFile(String filePath) {

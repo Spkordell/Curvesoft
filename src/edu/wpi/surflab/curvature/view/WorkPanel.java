@@ -96,37 +96,22 @@ public class WorkPanel extends JPanel implements Runnable {
 		this.savePointOfView();
         model = new ProgressiveSurfaceModel() ;        
         surfacePanel.setModel(model);
-           
-        //TODO: Complete the below two lines
-        //model.setYMin((float) mainController.getSurface().getMinPosition());
-        //model.setYMax((float) mainController.getSurface().getMaxPosition());            
-                    
+         
+        model.setXMin((float) mainController.getSurface().getMinXPosition());
+        model.setXMax((float) mainController.getSurface().getMaxXPosition());  
+        model.setYMin((float) mainController.getSurface().getMinYPosition());
+        model.setYMax((float) mainController.getSurface().getMaxYPosition());            
+ 
+        
         model.setDisplayXY(true);
         model.setDisplayZ(true);
  
         this.restorePointOfView();
         
-        /*
+        
         model.setMapper(new Mapper() {
-                public  float f1( float a, float b) {
-                	                    	
-
-                	int x = (int) (map(a,model.getXMin(),model.getXMax(),0,mainController.getSurface().allCalculatedScales.size())*.999);
-                	//int y = (int) (map(b,model.getYMin(),model.getYMax(),0,mainController.getProfile().allCalculatedPoints.get(x).size())*.999);            	
-                	int y = (int) (map(b,model.getYMin(),model.getYMax(),0,mainController.getSurface().allCalculatedPoints.getFirst().size())*.999);
-                	
-                	
-                	try {
-                		float z = mainController.getSurface().allCalculatedPoints.get(x).get(y).getY().floatValue();
-                		//System.out.println(y+"--"+mainController.getProfile().allCalculatedPoints.get(x).size()+"--"+model.getYMax());
-                		return z;
-                	}  catch (Exception  e) {
-                		//e.printStackTrace();
-                		//System.out.println("Exception");
-                		return 0;
-                	}
-                	//System.out.println(x+"/"+mainController.getProfile().allCalculatedScales.size()+","+y+"/"+mainController.getProfile().allCalculatedPoints.get(0).size()+","+z);             
-                	
+                public  float f1( float a, float b) {                		  
+                	return (float)mainController.getSurface().getHeight(a,b);
                 }
 
 				@Override
@@ -135,7 +120,7 @@ public class WorkPanel extends JPanel implements Runnable {
 					return 0;
 				}
         });
-    */
+    
         model.plot().execute();
         this.add(surfacePanel);
 	}

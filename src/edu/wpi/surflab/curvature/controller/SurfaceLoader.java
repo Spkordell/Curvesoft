@@ -21,7 +21,7 @@ public class SurfaceLoader {
 			String[] columnData;
 			while ((line = reader.readLine()) != null) {
 			      columnData = line.split("[\t, ]+");
-			      if (columnData.length == 2) {
+			      if (columnData.length == 3) {
 			    	  surface.add(new DataPoint3D(Double.valueOf(columnData[0]), Double.valueOf(columnData[1]),Double.valueOf(columnData[2])));
 			      }
 			}

@@ -37,7 +37,6 @@ public class OptionPanel extends JPanel {
 					break;
 				}
 				WorkPanel.getInstance().update();
-				System.out.println(tabbedPane.getSelectedIndex());
 			}
 			
 		});
@@ -50,7 +49,15 @@ public class OptionPanel extends JPanel {
 	}
 	
 	public void disableProfileTab() {
-		tabbedPane.setEnabledAt(2, false);
+		tabbedPane.setEnabledAt(0, false);
+	}
+	
+	public void setProfileTabActive() {
+		tabbedPane.setSelectedIndex(0);
+	}
+	
+	public void setSurfaceTabActive() {
+		tabbedPane.setSelectedIndex(1);
 	}
 	
 	public static OptionPanel getInstance(MainController mainController) {
@@ -63,4 +70,6 @@ public class OptionPanel extends JPanel {
 	public static OptionPanel getInstance() {
 		return optionPanel;
 	}
+
+
 }
