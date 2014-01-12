@@ -5,6 +5,8 @@ package edu.wpi.surflab.curvature.controller;
 
 import java.util.LinkedList;
 
+import edu.wpi.surflab.curvature.model.DataPoint2D;
+import edu.wpi.surflab.curvature.model.DataPoint3D;
 import edu.wpi.surflab.curvature.model.Profile;
 import edu.wpi.surflab.curvature.model.Surface;
 import edu.wpi.surflab.curvature.view.OptionPanel;
@@ -55,6 +57,29 @@ public class MainController {
 		SurfaceOptionPanel.getInstance().enablePanel();
 		OptionPanel.getInstance().disableProfileTab();
 		OptionPanel.getInstance().setSurfaceTabActive();
+		SurfaceOptionPanel.getInstance().setDefaultSliderValues();
+	}
+	
+	public void extractProfile() {
+		Profile extractedProfile = new Profile();
+		 if (SurfaceOptionPanel.getInstance().isHorizontalSelected()) {
+			   for (DataPoint3D p: this.getSurface().getSurface()) {
+				   if (p.getX() < SurfaceOptionPanel.getInstance().getProfileSelection() + this.getSurface().horizontalSamplingInterval()  && p.getX() > SurfaceOptionPanel.getInstance().getProfileSelection() - this.getSurface().horizontalSamplingInterval()) {
+					   extractedProfile.add(new DataPoint2D(p.getY(),p.getZ()));
+				   }
+			   }
+		   } else {
+			   for (DataPoint3D p: this.getSurface().getSurface()) {
+				   if (p.getY() < SurfaceOptionPanel.getInstance().getProfileSelection() + this.getSurface().verticalSamplingInterval()  && p.getY() > SurfaceOptionPanel.getInstance().getProfileSelection() - this.getSurface().verticalSamplingInterval()) {
+					   extractedProfile.add(new DataPoint2D(p.getX(),p.getZ()));
+				   }
+			   }		   	   
+		   }
+		 extractedProfile.setUnits(this.getSurface().getUnits());
+		 profiles.add(extractedProfile);
+		 OptionPanel.getInstance().enableProfileTab();
+		 ProfileOptionPanel.getInstance().enablePanel();
+		 OptionPanel.getInstance().setProfileTabActive();
 	}
 	
 	public void saveFile(String filePath) {

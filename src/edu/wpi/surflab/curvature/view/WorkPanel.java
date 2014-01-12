@@ -2,12 +2,16 @@ package edu.wpi.surflab.curvature.view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
 import java.util.LinkedList;
+import java.util.NoSuchElementException;
 
 import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 
 import net.ericaro.surfaceplotter.JSurfacePanel;
 import net.ericaro.surfaceplotter.Mapper;
@@ -28,6 +32,7 @@ import org.jfree.data.xy.XYSeriesCollection;
 
 import edu.wpi.surflab.curvature.controller.MainController;
 import edu.wpi.surflab.curvature.model.DataPoint2D;
+import edu.wpi.surflab.curvature.model.DataPoint3D;
 
 @SuppressWarnings("serial")
 public class WorkPanel extends JPanel implements Runnable {
@@ -36,13 +41,16 @@ public class WorkPanel extends JPanel implements Runnable {
 	private MainController mainController;
 	public boolean isRunning;
 	private Thread t;
+	JSplitPane splitPane;
 	
 	ProgressiveSurfaceModel model;
 	private float chartRotation;
 	private float chartElevation;
+	private JSurfacePanel surface;
 	
 	private WorkPanel(MainController mainController) {
 		setLayout(new BorderLayout());
+		splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		this.mainController = mainController;       
 	}
 
@@ -79,54 +87,110 @@ public class WorkPanel extends JPanel implements Runnable {
 	}
 	
 	private void graphSurfaceMode() {
-		//System.out.println("Surface Mode");
-		drawSurface();
+		surface = drawSurface();
+		if (surface != null) {
+			//this.setLayout(new GridLayout(2, 1));
+			//this.add(surface);
+			//this.add(drawSurfaceCrossSection());
+			//splitPane.add(surface);
+			//splitPane.add(drawSurfaceCrossSection());
+			splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,surface,drawSurfaceCrossSection());
+			this.add(splitPane);
+			invalidate();
+			splitPane.setDividerLocation(300);
+			//this.add(new JSplitPane(JSplitPane.VERTICAL_SPLIT,surface,drawSurfaceCrossSection()));
+		}
 	}
 	
-	private void drawSurface() {		
-		JSurfacePanel surfacePanel = new JSurfacePanel();
+	public void updateCrossSection() {
+		int oldDividerLocation = splitPane.getDividerLocation();
+		this.removeAll();
+		splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,surface,drawSurfaceCrossSection());
+		this.add(splitPane);
+		validate();
+		splitPane.setDividerLocation(oldDividerLocation);
+	}
+	
+	@SuppressWarnings("deprecation")
+	private Component drawSurfaceCrossSection() {
+		String xLabel = "Position ("+mainController.getSurface().getUnits()+")";
+		JFreeChart chart = ChartFactory.createScatterPlot("Profile", xLabel, "Height ("+mainController.getSurface().getUnits()+")", this.makeSurfaceSectionDataSet(), PlotOrientation.VERTICAL, true,false,false);	
+		final XYPlot plot = (XYPlot) chart.getPlot();
+		
+		Shape dot = new Ellipse2D.Double(0,0,2,2);
+		XYItemRenderer renderer = plot.getRenderer();
+		renderer.setShape(dot);	
+		plot.setNoDataMessage("No data available");
+		
+		return new ChartPanel(chart);
+	}
 
+	private XYDataset makeSurfaceSectionDataSet() {
+	   XYSeriesCollection dataSet = new XYSeriesCollection();
+	   XYSeries series = new XYSeries("Cross Section");
+	   if (SurfaceOptionPanel.getInstance().isHorizontalSelected()) {
+		   for (DataPoint3D p: mainController.getSurface().getSurface()) {
+			   if (p.getX() < SurfaceOptionPanel.getInstance().getProfileSelection() + mainController.getSurface().horizontalSamplingInterval()  && p.getX() > SurfaceOptionPanel.getInstance().getProfileSelection() - mainController.getSurface().horizontalSamplingInterval()) {
+				   series.add(p.getY(),p.getZ());
+			   }
+		   }
+	   } else {
+		   for (DataPoint3D p: mainController.getSurface().getSurface()) {
+			   if (p.getY() < SurfaceOptionPanel.getInstance().getProfileSelection() + mainController.getSurface().verticalSamplingInterval()  && p.getY() > SurfaceOptionPanel.getInstance().getProfileSelection() - mainController.getSurface().verticalSamplingInterval()) {
+				   series.add(p.getX(),p.getZ());
+			   }
+		   }		   	   
+	   }
+	   //System.out.println(xValue);
+	   //series.add(SurfaceOptionPanel.getInstance().getProfileSelection()*100,SurfaceOptionPanel.getInstance().getProfileSelection()*100);
+	   dataSet.addSeries(series);
+	   return dataSet;
+	}
+
+	private JSurfacePanel drawSurface() {
+		try {
+			mainController.getSurface();
+		} catch (NoSuchElementException e){
+			return null;
+		}
+		JSurfacePanel surfacePanel = new JSurfacePanel();
         surfacePanel.setTitleText("");
         surfacePanel.setBackground(Color.white);
         surfacePanel.setTitleFont(surfacePanel.getTitleFont().deriveFont(surfacePanel.getTitleFont().getStyle() | Font.BOLD, surfacePanel.getTitleFont().getSize() + 6f));
         surfacePanel.setConfigurationVisible(false);
 		surfacePanel.getSurface().setXLabel("X ("+mainController.getSurface().getUnits()+")");
-		surfacePanel.getSurface().setYLabel("Y ("+mainController.getSurface().getUnits()+")");
-		
+		surfacePanel.getSurface().setYLabel("Y ("+mainController.getSurface().getUnits()+")");		
 		this.savePointOfView();
         model = new ProgressiveSurfaceModel() ;        
-        surfacePanel.setModel(model);
-         
+        surfacePanel.setModel(model);        
         model.setXMin((float) mainController.getSurface().getMinXPosition());
         model.setXMax((float) mainController.getSurface().getMaxXPosition());  
         model.setYMin((float) mainController.getSurface().getMinYPosition());
-        model.setYMax((float) mainController.getSurface().getMaxYPosition());            
- 
-        
+        model.setYMax((float) mainController.getSurface().getMaxYPosition());
         model.setDisplayXY(true);
         model.setDisplayZ(true);
- 
-        this.restorePointOfView();
-        
-        
+        this.restorePointOfView(); 
         model.setMapper(new Mapper() {
                 public  float f1( float a, float b) {                		  
                 	return (float)mainController.getSurface().getHeight(a,b);
                 }
-
 				@Override
 				public float f2(float x, float y) {
-					// TODO Auto-generated method stub
 					return 0;
 				}
         });
-    
         model.plot().execute();
-        this.add(surfacePanel);
+        return surfacePanel;
 	}
 
 	@SuppressWarnings("deprecation")
 	private void graphProfileMode() {
+		try {
+			mainController.getProfile();
+		} catch (NoSuchElementException e){
+			return;
+		}
+		
 		JFreeChart chart = null;
 		
 		if (mainController.getPlotType().equals("2DScatter")) {

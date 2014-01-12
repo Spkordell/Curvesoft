@@ -52,6 +52,11 @@ public class OptionPanel extends JPanel {
 		tabbedPane.setEnabledAt(0, false);
 	}
 	
+
+	public void enableProfileTab() {
+		tabbedPane.setEnabledAt(0, true);
+	}
+	
 	public void setProfileTabActive() {
 		tabbedPane.setSelectedIndex(0);
 	}
@@ -70,6 +75,5 @@ public class OptionPanel extends JPanel {
 	public static OptionPanel getInstance() {
 		return optionPanel;
 	}
-
 
 }
