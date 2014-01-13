@@ -8,9 +8,10 @@ import java.awt.event.KeyEvent;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JRadioButton;
-import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 import javax.swing.event.ChangeEvent;
@@ -32,6 +33,9 @@ public class SurfaceOptionPanel extends JPanel implements ActionListener, Change
 	private JTextField profileSelectionTextField;
 	private JButton extractProfileButton;
 	final ButtonGroup profileSelecitonButtonGroup;
+	
+	private final JLabel statusLabel;
+	private JProgressBar progressBar;
 
 	public SurfaceOptionPanel(MainController mainController) {
 		this.mainController = mainController;
@@ -53,7 +57,7 @@ public class SurfaceOptionPanel extends JPanel implements ActionListener, Change
 	    
 		profileSelecitonButtonGroup = new ButtonGroup();
 		profileSelecitonButtonGroup.add(verticalRadio);
-		profileSelecitonButtonGroup.add(horizontalRadio);
+		profileSelecitonButtonGroup.add(horizontalRadio);		
 		
 		//profileSelectionSlider = new DoubleJSlider(JSlider.HORIZONTAL,1,20,5);
 		profileSelectionSlider = new DoubleJSlider(0, 0, 0, .01);
@@ -76,16 +80,39 @@ public class SurfaceOptionPanel extends JPanel implements ActionListener, Change
 		profileExtractionPanel.add(extractProfileButton);
 		profileExtractionPanel.setBorder(BorderFactory.createTitledBorder(
 		BorderFactory.createEtchedBorder(), "Profile Extraction"));
-		//profileExtractionPanel.setEnabled(false);
 
+		verticalRadio.setEnabled(false);
+		horizontalRadio.setEnabled(false);
+		profileSelectionSlider.setEnabled(false);
+		profileSelectionTextField.setEnabled(false);
+		extractProfileButton.setEnabled(false);
+		profileExtractionPanel.setEnabled(false);
+
+		
+		progressBar = new JProgressBar();
+		progressBar.setValue(100);
+		progressBar.setVisible(false);
+		
+		statusLabel = new JLabel();
+		statusLabel.setVisible(false);
+		
 		this.add(profileExtractionPanel);
+		this.add(statusLabel);
+		this.add(progressBar);
+		
 		
 		final int VERTICAL_PADDING = 5;
 		final int HORIZONTAL_PADDING = 5;
+		final int CLOSE = -5;
 		
 		layout.putConstraint(SpringLayout.NORTH, profileExtractionPanel, VERTICAL_PADDING, SpringLayout.NORTH, this);
 		layout.putConstraint(SpringLayout.WEST,profileExtractionPanel,HORIZONTAL_PADDING,SpringLayout.WEST,this);		
 		
+		layout.putConstraint(SpringLayout.SOUTH,progressBar,VERTICAL_PADDING+CLOSE-4,SpringLayout.SOUTH, this);
+		layout.putConstraint(SpringLayout.EAST,progressBar,HORIZONTAL_PADDING+CLOSE+CLOSE,SpringLayout.EAST,this);
+		
+		layout.putConstraint(SpringLayout.SOUTH,statusLabel,VERTICAL_PADDING+CLOSE-2,SpringLayout.NORTH, progressBar);
+		layout.putConstraint(SpringLayout.WEST,statusLabel,0,SpringLayout.WEST,progressBar);
 	}
 
 	public static SurfaceOptionPanel getInstance(MainController mainController) {
@@ -100,6 +127,12 @@ public class SurfaceOptionPanel extends JPanel implements ActionListener, Change
 	}
 
 	public void enablePanel() {
+		verticalRadio.setEnabled(true);
+		horizontalRadio.setEnabled(true);
+		profileSelectionSlider.setEnabled(true);
+		profileSelectionTextField.setEnabled(true);
+		extractProfileButton.setEnabled(true);
+		profileExtractionPanel.setEnabled(true);
 		mainController.setMode("Surface");
 	}
 
@@ -145,5 +178,26 @@ public class SurfaceOptionPanel extends JPanel implements ActionListener, Change
 	
 	public boolean isHorizontalSelected() {
 		return horizontalRadio.isSelected();
+	}
+	
+	public void setProgress(int i) {
+		progressBar.setValue(i);
+	}
+	
+	public void showProgressBar() {
+		progressBar.setVisible(true);
+	}
+	
+	public void hideProgressBar() {
+		progressBar.setVisible(false);
+	}
+	
+	public void hideStatusLabel() {
+		this.statusLabel.setVisible(false);
+	}
+	
+	public void showStatusLabel(String text) {
+		this.statusLabel.setText(text);
+		this.statusLabel.setVisible(true);
 	}
 }

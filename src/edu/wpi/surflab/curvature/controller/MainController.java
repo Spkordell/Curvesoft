@@ -3,12 +3,19 @@
  */
 package edu.wpi.surflab.curvature.controller;
 
+import java.awt.GridLayout;
 import java.util.LinkedList;
+
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 import edu.wpi.surflab.curvature.model.DataPoint2D;
 import edu.wpi.surflab.curvature.model.DataPoint3D;
 import edu.wpi.surflab.curvature.model.Profile;
 import edu.wpi.surflab.curvature.model.Surface;
+import edu.wpi.surflab.curvature.view.Main;
 import edu.wpi.surflab.curvature.view.OptionPanel;
 import edu.wpi.surflab.curvature.view.ProfileOptionPanel;
 import edu.wpi.surflab.curvature.view.SurfaceOptionPanel;
@@ -37,7 +44,7 @@ public class MainController {
 	public MainController() {
 		scales = new LinkedList<Double>(); 
 		profileLoader = new ProfileLoader();
-		surfaceLoader = new SurfaceLoader();
+		surfaceLoader = new SurfaceLoader(this);
 		fileSaver = new FileSaver();
 		profiles = new LinkedList<Profile>();
 		surfaces = new LinkedList<Surface>();
@@ -52,12 +59,40 @@ public class MainController {
 	}
 
 	public void loadSurface(String filePath) {
-		surfaces.add(surfaceLoader.loadFile(filePath));
+		OptionPanel.getInstance().setSurfaceTabActive();
+		surfaceLoader.setFileToLoad(filePath);
+		Thread t = new Thread(surfaceLoader);
+    	t.start();
+	}
+	
+	public void finishLoadingSurface() {
+		surfaces.add(surfaceLoader.getSurface());
 		WorkPanel.getInstance().update();
 		SurfaceOptionPanel.getInstance().enablePanel();
-		OptionPanel.getInstance().disableProfileTab();
-		OptionPanel.getInstance().setSurfaceTabActive();
+		OptionPanel.getInstance().disableProfileTab();	
 		SurfaceOptionPanel.getInstance().setDefaultSliderValues();
+				
+		//Prompt the user for the correct units	    
+	    Object[] possibilities = {"pm","nm","um","mm","cm","dm","m","hm","km","in","ft","mile"};
+	    JPanel message = new JPanel();
+	    message.setLayout(new GridLayout(2, 1));
+	    message.add(new JLabel("Select the file's units:\n"));
+	    @SuppressWarnings({ "unchecked", "rawtypes" })
+		JComboBox UnitsComboBox = new JComboBox(possibilities);
+	    UnitsComboBox.setSelectedItem("mm");
+        message.add(UnitsComboBox);
+        // JCheckBox PreCalcCheck = new JCheckBox("Precalculate",true);
+        //message.add(PreCalcCheck);              
+        		JOptionPane.showOptionDialog(Main.getFrame(), message, "", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, 
+                null, null, null);
+	    ////////////////////////////// 
+	    //If a string was returned, say so.
+        String s = (String)UnitsComboBox.getSelectedItem();
+        // mainController.setPrecalculate(PreCalcCheck.isSelected());
+	    if ((s != null) && (s.length() > 0)) {
+	        this.getSurface().setUnits(s);
+	        WorkPanel.getInstance().update();
+	    }
 	}
 	
 	public void extractProfile() {
