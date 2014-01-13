@@ -30,7 +30,7 @@ public class SurfaceLoader implements Runnable {
 		File file = new File(filename);
 		try {
 			SurfaceOptionPanel.getInstance().showProgressBar();
-			SurfaceOptionPanel.getInstance().showStatusLabel("Loading Surface");
+			SurfaceOptionPanel.getInstance().showStatusLabel("Preparing to Load Surface");
 			SurfaceOptionPanel.getInstance().setProgress(0);
 			BufferedReader reader = new BufferedReader(new FileReader(file));
 			
@@ -42,6 +42,7 @@ public class SurfaceLoader implements Runnable {
 			
 			String line;
 			String[] columnData;
+			SurfaceOptionPanel.getInstance().showStatusLabel("Loading Surface");
 			while ((line = reader.readLine()) != null) {
 			      columnData = line.split("[\t, ]+");
 			      if (columnData.length == 3) {
