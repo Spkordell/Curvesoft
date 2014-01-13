@@ -49,7 +49,6 @@ public class SurfaceLoader implements Runnable {
 			      }
 			      currentLine++;
 			      SurfaceOptionPanel.getInstance().setProgress((int)((((float)currentLine)/totalLines)*100));
-			      System.out.println((int)((((float)currentLine)/totalLines)*100));
 			}
 			reader.close();
 		} catch (FileNotFoundException e) {
