@@ -1,9 +1,11 @@
 package edu.wpi.surflab.curvature.model;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 public class Surface {
-	LinkedList<DataPoint3D> points = new LinkedList<DataPoint3D>();
+	List<DataPoint3D> points = new ArrayList<DataPoint3D>();
 	private String units;
 	Double minXPosition = null;
 	Double minYPosition = null;
@@ -11,11 +13,11 @@ public class Surface {
 	Double maxXPosition = null;
 	Double maxYPosition = null;
 	Double maxZPosition = null;
-	Double horizontalSamplingInterval = null;
 	Double verticalSamplingInterval = null;
+	Double horizontalSamplingInterval = null;
 	
 	public Surface() {
-		this.points = new LinkedList<DataPoint3D>();
+		this.points = new ArrayList<DataPoint3D>();
 	}
 	
 	public void add(DataPoint3D dataPoint) {
@@ -23,7 +25,7 @@ public class Surface {
 		resetMinMaxCachedValues();
 	}
 	
-	public LinkedList<DataPoint3D> getSurface() {
+	public List<DataPoint3D> getSurface() {
 		return points;
 	}
 
@@ -107,7 +109,7 @@ public class Surface {
 	
 	public double getMaxZPosition() {
 		if (maxYPosition != null) {
-			return maxXPosition;
+			return maxZPosition;
 		}
 		double max = Double.NEGATIVE_INFINITY;
 		for (DataPoint3D p: points) {
@@ -158,11 +160,35 @@ public class Surface {
 		*/
 	}
 	
+	public double verticalSamplingInterval() {
+		if (verticalSamplingInterval != null) {
+			return verticalSamplingInterval;
+		}
+		verticalSamplingInterval = this.points.get(1).getY() - this.points.get(0).getY();
+		return verticalSamplingInterval;
+	}
+	
 	public double horizontalSamplingInterval() {
 		if (horizontalSamplingInterval != null) {
 			return horizontalSamplingInterval;
 		}
-		horizontalSamplingInterval = this.points.get(1).getX() - this.points.getFirst().getX();
+		for (DataPoint3D p: points) {	
+			if (!p.getX().equals(this.points.get(0).getX())) {				
+				horizontalSamplingInterval = (p.getX() - this.points.get(0).getX());
+				return horizontalSamplingInterval;
+			}	
+		}
+		return 0;
+	}	
+	
+	/* THE CODE WAS AS BELOW, BUT WAS CHANGED (REPLACED BY ABOVE) WHEN A POSSIBLE BUG WAS FOUND. IT MIGHT STILL BE RIGHT. IF MORE BUGS SHOW UP, CHECK HERE FIRST
+	public double horizontalSamplingInterval() {
+		if (horizontalSamplingInterval != null) {
+			return horizontalSamplingInterval;
+		}
+		horizontalSamplingInterval = this.points.get(1).getX() - this.points.get(0).getX();
+		System.out.println(this.points.get(1).getX() + "::"+this.points.get(0).getX());
+		System.out.println("hSamp:" + horizontalSamplingInterval);
 		return horizontalSamplingInterval;
 	}
 	
@@ -171,12 +197,14 @@ public class Surface {
 			return verticalSamplingInterval;
 		}
 		for (DataPoint3D p: points) {	
-			if (p.getX() != this.points.getFirst().getX() && p.getY() != 0) {
-				System.out.println(p.getY()+","+this.points.getFirst().getY());
-				verticalSamplingInterval = (p.getY() - this.points.getFirst().getY());
+			if (p.getX() != this.points.get(0).getX() && p.getY() != 0) {
+				System.out.println(p.getY()+","+this.points.get(0).getY());
+				verticalSamplingInterval = (p.getY() - this.points.get(0).getY());
+				System.out.println("vSamp:" + verticalSamplingInterval);
 				return verticalSamplingInterval;
 			}	
 		}
+		System.out.println("vSamp:" + 0);
 		return 0;
 
 		
@@ -184,6 +212,7 @@ public class Surface {
 		//verticalSamplingInterval = this.points.get(((points.size()-1)/2)+3).getY() - this.points.getFirst().getY();
 		//return verticalSamplingInterval;
 	}	
+	*/
 }
 
 

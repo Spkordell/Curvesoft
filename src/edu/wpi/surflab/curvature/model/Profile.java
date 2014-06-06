@@ -35,10 +35,20 @@ public class Profile {
 		
 		calculatedPoints = new LinkedList<DataPoint2D>();
 		
-		if ((int)(scale/samplingInterval()) < points.size()) {
+		if (this.points.get(0).getX().equals(this.points.get(1).getX())) {
+			this.points.remove(0);
+		}
+		
+		/*
+		for (DataPoint2D p: this.points) {
+			System.out.println("("+p.getX()+", "+p.getY()+")");
+		}
+		*/
+		
+		if ((int)(scale/getSamplingInterval()) < points.size()) {
 			one = points.get(0);
-			two = points.get((int)(scale/samplingInterval())/2);
-			three = points.get((int)(scale/samplingInterval()));
+			two = points.get((int)(scale/getSamplingInterval())/2);
+			three = points.get((int)(scale/getSamplingInterval()));
 			  
 			while (three.getX() < (points.getLast().getX())) {
 				if (calculationType.equals("Heron")) {
@@ -53,25 +63,14 @@ public class Profile {
 					calculatedPoints.add(slope(one,three));		
 				} 
 				one = points.get(shift);
-				two = points.get((int)(scale/samplingInterval())/2 + shift);
-				three = points.get((int)(scale/samplingInterval()) + shift);	
+				two = points.get((int)(scale/getSamplingInterval())/2 + shift);
+				three = points.get((int)(scale/getSamplingInterval()) + shift);	
 				shift++;
 			}
 		}
 		return calculatedPoints;
 	}
-	
-	
-	
-	/** Determines the sampling interval of the profile
-	 * @param profile A point array representing the profile (must contain at least two points)
-	 * @return The sampling interval of the profile
-	 */
-	private double samplingInterval() {
-	  return this.points.get(1).getX() - this.points.getFirst().getX();
-	}
-
-	
+		
 	/** Calculates the curvature using herons method given three points
 	 * @param one The first data point
 	 * @param two The middle data point
@@ -182,7 +181,12 @@ public class Profile {
 		return this.calculatedPoints;
 	}
 
+	/** Determines the sampling interval of the profile
+	 * @param profile A point array representing the profile (must contain at least two points)
+	 * @return The sampling interval of the profile
+	 */
 	public double getSamplingInterval() {
+		//System.out.println("SI:"+points.get(1).getX()+"-"+points.get(0).getX());
 		return points.get(1).getX() - points.get(0).getX();
 	}
 

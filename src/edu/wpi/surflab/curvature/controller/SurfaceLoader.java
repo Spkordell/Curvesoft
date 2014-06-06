@@ -8,6 +8,8 @@ import java.io.IOException;
 
 import javax.swing.JOptionPane;
 
+import com.sun.jna.Native;
+
 import edu.wpi.surflab.curvature.model.DataPoint3D;
 import edu.wpi.surflab.curvature.model.Surface;
 import edu.wpi.surflab.curvature.view.SurfaceOptionPanel;
@@ -19,6 +21,9 @@ public class SurfaceLoader implements Runnable {
 	
 	public SurfaceLoader(MainController mainController) {
 		this.mainController = mainController;
+		//C:\Users\Steven\Desktop\\test.txt
+		//System.out.println(System.getProperty("user.dir"));
+		// ISurfaceDataLoader surfaceDataLoader = (ISurfaceDataLoader) Native.loadLibrary(System.getProperty("user.dir") + System.getProperty("file.separator") + "SurfaceDataLoading.dll",ISurfaceDataLoader.class);
 	}
 	
 	public void setFileToLoad(String filename) {

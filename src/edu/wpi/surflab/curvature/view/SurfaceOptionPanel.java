@@ -145,10 +145,10 @@ public class SurfaceOptionPanel extends JPanel implements ActionListener, Change
 				profileSelectionSlider.setDoubleStep(mainController.getSurface().horizontalSamplingInterval());
 				profileSelectionSlider.setDoubleMinimum(mainController.getSurface().getMinXPosition());
 				profileSelectionSlider.setDoubleMaximum(mainController.getSurface().getMaxXPosition());
-				System.out.println(mainController.getSurface().horizontalSamplingInterval());
+				//System.out.println(mainController.getSurface().horizontalSamplingInterval());
 			} else if (e.getActionCommand() == "Vertical") {
 				profileSelectionSlider.setDoubleStep(mainController.getSurface().verticalSamplingInterval());
-				System.out.println(mainController.getSurface().verticalSamplingInterval());
+				//System.out.println(mainController.getSurface().verticalSamplingInterval());
 				profileSelectionSlider.setDoubleMinimum(mainController.getSurface().getMinYPosition());
 				profileSelectionSlider.setDoubleMaximum(mainController.getSurface().getMaxYPosition());	
 			}
