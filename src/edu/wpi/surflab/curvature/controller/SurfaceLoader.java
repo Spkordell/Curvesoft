@@ -8,8 +8,6 @@ import java.io.IOException;
 
 import javax.swing.JOptionPane;
 
-import com.sun.jna.Native;
-
 import edu.wpi.surflab.curvature.model.DataPoint3D;
 import edu.wpi.surflab.curvature.model.Surface;
 import edu.wpi.surflab.curvature.view.SurfaceOptionPanel;

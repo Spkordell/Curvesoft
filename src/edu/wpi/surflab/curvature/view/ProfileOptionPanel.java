@@ -45,6 +45,13 @@ public class ProfileOptionPanel extends JPanel implements ActionListener {
 
 	private JTextField binSize;
 	private final JLabel binSizeLabel;
+	private final JLabel samplingIntervalLabel;
+	private final JLabel minScaleLabel;
+	private final JLabel maxScaleLabel;
+	
+	private JLabel samplingIntervalValueLabel;
+	private JLabel minScaleValueLabel;
+	private JLabel maxScaleValueLabel;
 	
 	private JCheckBox autoUpdateCheckBox;
 	
@@ -155,12 +162,26 @@ public class ProfileOptionPanel extends JPanel implements ActionListener {
 		plotTypeRadioPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Plot Type"));
 		plotTypeRadioPanel.setEnabled(false);
 	    
-		
 		binSizeLabel = new JLabel("Bin Size:");
 		binSize = new JTextField(20);
 		binSize.setText("0.001");
 		binSizeLabel.setEnabled(false);
 		binSize.setEnabled(false);
+		
+		samplingIntervalLabel = new JLabel("Sampling Interval:");
+		minScaleLabel = new JLabel("Min Scale:        ");
+		maxScaleLabel = new JLabel("Max Scale:        ");
+		
+		samplingIntervalValueLabel = new JLabel("");
+		minScaleValueLabel = new JLabel("");
+		maxScaleValueLabel = new JLabel("");
+		
+		samplingIntervalLabel.setEnabled(false);
+		minScaleLabel.setEnabled(false);
+		maxScaleLabel.setEnabled(false);
+		samplingIntervalValueLabel.setEnabled(false);
+		minScaleValueLabel.setEnabled(false);
+		maxScaleValueLabel.setEnabled(false);
 		
 		autoUpdateCheckBox = new JCheckBox("Enable Auto Update",true);
 		autoUpdateCheckBox.setEnabled(false);
@@ -250,6 +271,13 @@ public class ProfileOptionPanel extends JPanel implements ActionListener {
 		this.add(plotTypeRadioPanel);
 		this.add(binSizeLabel);
 		this.add(binSize);
+		this.add(samplingIntervalLabel);
+		this.add(minScaleLabel);
+		this.add(maxScaleLabel);
+		this.add(samplingIntervalValueLabel);
+		this.add(minScaleValueLabel);
+		this.add(maxScaleValueLabel);
+		
 		this.add(autoUpdateCheckBox);
 		this.add(statusLabel);
 		this.add(progressBar);
@@ -279,6 +307,24 @@ public class ProfileOptionPanel extends JPanel implements ActionListener {
 		
 		layout.putConstraint(SpringLayout.NORTH,binSize,VERTICAL_PADDING,SpringLayout.SOUTH, plotTypeRadioPanel);
 		layout.putConstraint(SpringLayout.EAST,binSize,HORIZONTAL_PADDING,SpringLayout.EAST,scale);
+		
+		layout.putConstraint(SpringLayout.NORTH,samplingIntervalLabel,VERTICAL_PADDING,SpringLayout.SOUTH, binSizeLabel);
+		layout.putConstraint(SpringLayout.WEST, samplingIntervalLabel,HORIZONTAL_PADDING,SpringLayout.WEST,this);
+		
+		layout.putConstraint(SpringLayout.NORTH,samplingIntervalValueLabel,VERTICAL_PADDING,SpringLayout.SOUTH, binSizeLabel);
+		layout.putConstraint(SpringLayout.EAST,samplingIntervalValueLabel,HORIZONTAL_PADDING,SpringLayout.EAST,scale);
+		
+		layout.putConstraint(SpringLayout.NORTH,minScaleLabel,VERTICAL_PADDING,SpringLayout.SOUTH, samplingIntervalLabel);
+		layout.putConstraint(SpringLayout.WEST, minScaleLabel,HORIZONTAL_PADDING,SpringLayout.WEST,this);
+		
+		layout.putConstraint(SpringLayout.NORTH,minScaleValueLabel,VERTICAL_PADDING,SpringLayout.SOUTH, samplingIntervalLabel);
+		layout.putConstraint(SpringLayout.EAST,minScaleValueLabel,HORIZONTAL_PADDING,SpringLayout.EAST,scale);
+		
+		layout.putConstraint(SpringLayout.NORTH,maxScaleLabel,VERTICAL_PADDING,SpringLayout.SOUTH, minScaleLabel);
+		layout.putConstraint(SpringLayout.WEST, maxScaleLabel,HORIZONTAL_PADDING,SpringLayout.WEST,this);
+		
+		layout.putConstraint(SpringLayout.NORTH,maxScaleValueLabel,VERTICAL_PADDING,SpringLayout.SOUTH, minScaleLabel);
+		layout.putConstraint(SpringLayout.EAST,maxScaleValueLabel,HORIZONTAL_PADDING,SpringLayout.EAST,scale);
 		
 		layout.putConstraint(SpringLayout.SOUTH,autoUpdateCheckBox,VERTICAL_PADDING+CLOSE,SpringLayout.SOUTH, this);
 		layout.putConstraint(SpringLayout.WEST,autoUpdateCheckBox,HORIZONTAL_PADDING,SpringLayout.WEST,this);
@@ -388,6 +434,16 @@ public class ProfileOptionPanel extends JPanel implements ActionListener {
 		scatter3dRadio.setEnabled(true);
 		binSizeLabel.setEnabled(true);
 		binSize.setEnabled(true);
+		samplingIntervalLabel.setEnabled(true);
+		minScaleLabel.setEnabled(true);
+		maxScaleLabel.setEnabled(true);
+		samplingIntervalValueLabel.setEnabled(true);
+		minScaleValueLabel.setEnabled(true);
+		maxScaleValueLabel.setEnabled(true);
+		
+		samplingIntervalValueLabel.setText(String.valueOf(this.mainController.getProfile().getSamplingInterval()));
+		minScaleValueLabel.setText(String.valueOf(this.mainController.getProfile().getSmallestPossibleScale()));
+		maxScaleValueLabel.setText(String.valueOf(this.mainController.getProfile().getLargestPossibleScale()));
 	}
 	
 	public void disablePanel() {
@@ -402,6 +458,12 @@ public class ProfileOptionPanel extends JPanel implements ActionListener {
 		scatter3dRadio.setEnabled(false);
 		binSizeLabel.setEnabled(false);
 		binSize.setEnabled(false);
+		samplingIntervalLabel.setEnabled(false);
+		minScaleLabel.setEnabled(false);
+		maxScaleLabel.setEnabled(false);
+		samplingIntervalValueLabel.setEnabled(false);
+		minScaleValueLabel.setEnabled(false);
+		maxScaleValueLabel.setEnabled(false);
 	}
 
 	@Override

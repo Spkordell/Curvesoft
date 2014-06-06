@@ -35,10 +35,6 @@ public class Profile {
 		
 		calculatedPoints = new LinkedList<DataPoint2D>();
 		
-		if (this.points.get(0).getX().equals(this.points.get(1).getX())) {
-			this.points.remove(0);
-		}
-		
 		/*
 		for (DataPoint2D p: this.points) {
 			System.out.println("("+p.getX()+", "+p.getY()+")");
@@ -186,6 +182,9 @@ public class Profile {
 	 * @return The sampling interval of the profile
 	 */
 	public double getSamplingInterval() {
+		if (this.points.get(0).getX().equals(this.points.get(1).getX())) {
+			this.points.remove(0);
+		}
 		//System.out.println("SI:"+points.get(1).getX()+"-"+points.get(0).getX());
 		return points.get(1).getX() - points.get(0).getX();
 	}
