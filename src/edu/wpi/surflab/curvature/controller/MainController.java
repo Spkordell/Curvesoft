@@ -50,6 +50,9 @@ public class MainController {
 		surfaces = new LinkedList<Surface>();
 	}
 
+	/** Loads a 2D profile from the specified file path
+	 * @param filePath The location of the profile on the file system
+	*/ 
 	public void loadProfile(String filePath) {
 		profiles.add(profileLoader.loadFile(filePath));
 		WorkPanel.getInstance().update();
@@ -58,6 +61,9 @@ public class MainController {
 		OptionPanel.getInstance().setProfileTabActive();
 	}
 
+	/** Loads a 3D surface from the specified file path
+	 * @param filePath The location of the surface on the file system
+	*/ 
 	public void loadSurface(String filePath) {
 		OptionPanel.getInstance().setSurfaceTabActive();
 		surfaceLoader.setFileToLoad(filePath);
@@ -65,6 +71,8 @@ public class MainController {
     	t.start();
 	}
 	
+	/** Prompts the user for the surfaces units and saves the surface to the maincontroller 
+	*/ 
 	public void finishLoadingSurface() {
 		surfaces.add(surfaceLoader.getSurface());
 		WorkPanel.getInstance().update();
@@ -95,6 +103,8 @@ public class MainController {
 	    }
 	}
 	
+	/** Extracts a profile from a surface
+	*/ 
 	public void extractProfile() {
 		Profile extractedProfile = new Profile();
 		 if (SurfaceOptionPanel.getInstance().isHorizontalSelected()) {

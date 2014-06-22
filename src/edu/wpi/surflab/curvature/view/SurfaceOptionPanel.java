@@ -126,6 +126,8 @@ public class SurfaceOptionPanel extends JPanel implements ActionListener, Change
 		return surfaceOptionPanel;
 	}
 
+	/** Enables all the fields on the panel
+	*/ 
 	public void enablePanel() {
 		verticalRadio.setEnabled(true);
 		horizontalRadio.setEnabled(true);

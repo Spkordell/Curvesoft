@@ -337,6 +337,10 @@ public class ProfileOptionPanel extends JPanel implements ActionListener {
 		layout.putConstraint(SpringLayout.WEST,statusLabel,0,SpringLayout.WEST,progressBar);
 	}
 
+	/** Converts a string describing the desired scales into a list of scale values
+	 * @param s The string to parse
+	 * @returns A list of scales to compute
+	*/ 
 	private LinkedList<Double> parseScale(String s) {
 		String[] scales;
 		LinkedList<Double> result = new LinkedList<Double>();
@@ -402,10 +406,15 @@ public class ProfileOptionPanel extends JPanel implements ActionListener {
 		return mainController.getProfile().isScaleValid(scale);
 	}
 
+	/** Hides the status text label
+	*/ 
 	public void hideStatusLabel() {
 		this.statusLabel.setVisible(false);
 	}
 	
+	/** Displays the status label with the given text
+	 * @param text The text to display by the lable
+	*/ 
 	public void showStatusLabel(String text) {
 		this.statusLabel.setText(text);
 		this.statusLabel.setVisible(true);
@@ -422,6 +431,8 @@ public class ProfileOptionPanel extends JPanel implements ActionListener {
 		return profileOptionPanel;
 	}
 	
+	/** Enables all the fields on the panel
+	*/ 
 	public void enablePanel() {
 		this.calculationTypeRadioPanel.setEnabled(true);
 		this.scaleLabel.setEnabled(true);
@@ -446,6 +457,8 @@ public class ProfileOptionPanel extends JPanel implements ActionListener {
 		maxScaleValueLabel.setText(String.valueOf(this.mainController.getProfile().getLargestPossibleScale()));
 	}
 	
+	/** Disables all the fields on the panel
+	*/ 
 	public void disablePanel() {
 		this.calculationTypeRadioPanel.setEnabled(false);
 		this.scaleLabel.setEnabled(false);
@@ -495,15 +508,22 @@ public class ProfileOptionPanel extends JPanel implements ActionListener {
 		return this.scatter2dRadio;
 	}
 
+	/** Sets the progress bars value
+	 * @param i The value to set for the progress bar
+	*/ 
 	public void setProgress(int i) {
 		progressBar.setValue(i);
 	}
 	
+	/** Displays the progress bar on the panel
+	*/ 
 	public void showProgressBar() {
 		autoUpdateCheckBox.setSelected(false);
 		progressBar.setVisible(true);
 	}
 	
+	/** Hides teh progress bar on the panel
+	*/ 
 	public void hideProgressBar() {
 		progressBar.setVisible(false);
 		autoUpdateCheckBox.setSelected(true);

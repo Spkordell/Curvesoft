@@ -35,6 +35,10 @@ public class MainMenu extends JPanel{
 	JRadioButtonMenuItem rbMenuItem;
 	JCheckBoxMenuItem cbMenuItem;
 	
+	/** Constructs the GUIs menu bar
+	 * @param parent The Frame the menu bar will appear in
+	 * @param mainController The main controller
+	*/ 
 	public MainMenu(Frame parent, MainController mainController) {
 		//Create the menu bar.
 		menuBar = new JMenuBar();
