@@ -18,6 +18,13 @@ import edu.wpi.surflab.curvature.view.ProfileOptionPanel;
  */
 public class FileSaver {
 
+	/** Saves either calculated curvature values or curvature frequency values to a file
+	 * @param filename The file to save the data to 
+	 * @param allCalculatedPoints The data to save to the file
+	 * @param allCalculatedScales The scales associated with the data
+	 * @param calculatedDistribution Histogram data to save to a file
+	 * @param units The units of the data
+	 */
 	public void saveFile(String filename, LinkedList<LinkedList<DataPoint2D>> allCalculatedPoints, LinkedList<Double> allCalculatedScales, DataPoint2D[] calculatedDistribution, String units) {
 		try { 
 			File file = new File(filename);

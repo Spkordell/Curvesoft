@@ -24,10 +24,15 @@ public class SurfaceLoader implements Runnable {
 		// ISurfaceDataLoader surfaceDataLoader = (ISurfaceDataLoader) Native.loadLibrary(System.getProperty("user.dir") + System.getProperty("file.separator") + "SurfaceDataLoading.dll",ISurfaceDataLoader.class);
 	}
 	
+	/** Sets the name of the file to load
+	 * @param filename
+	 */
 	public void setFileToLoad(String filename) {
 		this.filename = filename;
 	}
 	
+	/** Loads the surface
+	 */
 	public void loadFile() {
 		surface = new Surface();
 		File file = new File(filename);
@@ -67,6 +72,9 @@ public class SurfaceLoader implements Runnable {
 		mainController.finishLoadingSurface();
 	}
 
+	/**Returns the surface
+	 * @returns The surface
+	 */
 	public Surface getSurface() {
 		return this.surface;
 	}

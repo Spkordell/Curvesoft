@@ -20,6 +20,10 @@ import edu.wpi.surflab.curvature.model.Profile;
  */
 public class ProfileLoader {
 
+	/** Loads a profile from a file
+	 * @param filename The file to load
+	 * @return A new profile contiaining the data loaded from the specified file
+	 */
 	public Profile loadFile(String filename) {
 		Profile profile = new Profile();
 		File file = new File(filename);
