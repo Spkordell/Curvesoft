@@ -40,7 +40,10 @@ public class MainController {
 	private double binSize = 0.001;
 	private boolean precalculate;
 
-	
+	/**Creates a new maincontroller which allows access to most data.
+	 * Particularly is stores profiles, surfaces, and calculated scale
+	 * and provides a means for loading surfaces and profiles.
+	 */
 	public MainController() {
 		scales = new LinkedList<Double>(); 
 		profileLoader = new ProfileLoader();
@@ -131,10 +134,20 @@ public class MainController {
 		fileSaver.saveFile(filePath,profiles.getLast().allCalculatedPoints,profiles.getLast().allCalculatedScales, profiles.getLast().calculatedDistribution,getProfile().getUnits());
 	}
 	
+	/**
+	 * Currently, returns the last profile loaded or extracted.
+	 * TODO: By changing how this function works, one could easily allow the program to work with multiple profiles
+	 * @return The last loaded or extracted profile
+	 */
 	public Profile getProfile() {
 		return profiles.getLast();
 	}
 	
+	/**
+	 * Currently, returns the last profile loaded
+	 * TODO: By changing how this function works, one could easily allow the program to work with multiple surfaces
+	 * @return The last loaded surface
+	 */
 	public Surface getSurface() {
 		return surfaces.getLast();
 	}
@@ -178,11 +191,14 @@ public class MainController {
 	public boolean getPrecalculate(){
 		return this.precalculate;
 	}
-
+	
 	public String getMode() {
 		return mode;
 	}
 
+	/** Sets the operation mode of the program. Currently, valid options are "Profile" and "Surface"
+	 * @param mode The mode the program will work in. "Profile" or "Surface"
+	 */
 	public void setMode(String mode) {
 		this.mode = mode;
 	}
