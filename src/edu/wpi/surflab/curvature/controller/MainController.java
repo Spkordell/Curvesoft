@@ -180,6 +180,10 @@ public class MainController {
 		this.binSize = Double.parseDouble(binSize);
 	}
 	
+	/**
+	 * Returns the bin size
+	 * @returns The bin size
+	 */
 	public double getBinSize() {
 		return this.binSize;
 	}
