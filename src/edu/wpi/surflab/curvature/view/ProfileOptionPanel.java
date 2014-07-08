@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.LinkedList;
 
+import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
@@ -527,5 +528,9 @@ public class ProfileOptionPanel extends JPanel implements ActionListener {
 	public void hideProgressBar() {
 		progressBar.setVisible(false);
 		autoUpdateCheckBox.setSelected(true);
+	}
+
+	public AbstractButton getScatter3dRadio() {
+		return this.scatter3dRadio;
 	}
 }

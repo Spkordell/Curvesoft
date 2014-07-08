@@ -37,7 +37,7 @@ public class FileSaver {
 			FileWriter fw = new FileWriter(file.getAbsoluteFile());
 			BufferedWriter bw = new BufferedWriter(fw);
 			
-			if (ProfileOptionPanel.getInstance().getScatter2dRadio().isSelected()) {
+			if (ProfileOptionPanel.getInstance().getScatter2dRadio().isSelected() || ProfileOptionPanel.getInstance().getScatter3dRadio().isSelected()) {
 				bw.write("scale ("+units+"),postion ("+units+"),result (1/"+units+")\n");
 				for (int i = 0; i < allCalculatedPoints.size(); i++) {
 					for (DataPoint2D p : allCalculatedPoints.get(i)) {
